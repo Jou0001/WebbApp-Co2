@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,18 +10,24 @@
     <link rel="stylesheet" href="styles.css">
     <title>Create User</title>
 </head>
+
 <body>
 
+    &nbsp;
+    <div style="text-align:center;">
+   <br> <h1>Sign Up Form</h1> </br>
+    
 
-<h1>Sign Up Form</h1>
+        <label for=""><b>Email</b></label>
+        <br>
+        <li><input v-model="email" placeholder="Enter E-mail" type="text" /> </li></br>
+        <label for="password"><b>Password</b></label>
+        <br>
+        <li><input v-model="password" type="password" placeholder="Enter Password" type="text" /> </li></br>
 
-<label for=""><b>Email</b></label>
-<br><li><input v-model="email" placeholder="Enter E-mail" type="text" /> </li></br>
-<label for="password"><b>Password</b></label>
-<br><li><input v-model="password" type="password" placeholder="Enter Password" type="text" /> </li></br>
-
-<button type="submit">Sign up</button>
-</div>
+        <button type="submit">Sign up</button>
+    </div>
 
 </body>
+
 </html>

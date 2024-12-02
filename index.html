@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <meta charset="UTF-8">
@@ -8,11 +9,23 @@
     <title>Document</title>
 </head>
 <body>
-    <div id="app">
-        <input v-model="username" type="text" placeholder="Username...">
-        <input v-model="password" type="password" placeholder="Password...">
-        <p v-if="errorMessage">{{errorMessage}}</p>
-        <input @click="Login" type="button" value="Login">
+    <br>
+    <div id="app" style="text-align:center;">
+        <div style="">
+            <br><h1>Login</h1><br>
+            <label><b>Email</b></label>
+            <br>
+            <input v-model="username" type="text" placeholder="Username...">
+            <br>
+            <label><b>Password</b></label>
+            <br>
+            <input v-model="password" type="password" placeholder="Password...">
+            <br>
+            <div v-if="errorMessage">
+                <p>{{errorMessage}}</p>
+            </div>
+            <input @click="Login" type="button" value="Login">
+        </div>
     </div>
     <script src="index.js"></script>
 </body>

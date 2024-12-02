@@ -10,15 +10,17 @@
     <title>Create User</title>
 </head>
 <body>
+
+
 <h1>Sign Up Form</h1>
 
-<br><li><input v-model="username" placeholder="Username" type="text"/> </li></br>
+<label for=""><b>Email</b></label>
+<br><li><input v-model="email" placeholder="Enter E-mail" type="text" /> </li></br>
+<label for="password"><b>Password</b></label>
+<br><li><input v-model="password" placeholder="Enter Password" type="text" /> </li></br>
 
-<br><li><input v-model="email" placeholder="E-mail" type="text" /> </li></br>
-
-<br><li><input v-model="password" placeholder="Password" type="text" /> </li></br>
-
-<button type="button">Sign up</button>
+<button type="submit">Sign up</button>
+</div>
 
 </body>
 </html>

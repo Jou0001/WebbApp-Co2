@@ -8,6 +8,12 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <div id="app">
+        <input v-model="username" type="text" placeholder="Username...">
+        <input v-model="password" type="password" placeholder="Password...">
+        <p v-if="errorMessage">{{errorMessage}}</p>
+        <input @click="Login" type="button" value="Login">
+    </div>
+    <script src="index.js"></script>
 </body>
 </html>

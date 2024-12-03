@@ -7,6 +7,7 @@ Vue.createApp({
             password: '',
             userId: null,
             errorMessage: null,
+            CO2ChartSource: "",
             validationStatus: {
                 validateStatus: function (status) {
                     return true;
@@ -26,6 +27,7 @@ Vue.createApp({
                 e.preventDefault();
                 var btn = document.getElementById("loginButton")
                 if (btn) btn.click()
+                this.SetChartData()
               });
         }
     },
@@ -55,10 +57,19 @@ Vue.createApp({
             }
             this.userId = response.data
             console.log(this.userId)
-
-
-
-
+        },
+        async SetChartData()
+        {
+            this.CO2ChartSource = "https://quickchart.io/chart?width=500&height=300&chart={type:'line',data:{labels:['January','February', 'March','April', 'May'], datasets:[{label:'Dogs',data:[50,60,70,180,190], fill: false},{label:'Cats',data:[100,200,300,400,500], fill: false}]}}"
+        },
+        SetChartImage()
+        {
+            //console.log("hello")
+            var chart = document.getElementById("CO2Chart")
+            if (chart)
+                chart.src = this.CO2ChartSource
+            else // try again :)
+                setTimeout(this.SetChartImage, 100)
         }
 
     }

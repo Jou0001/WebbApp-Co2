@@ -6,25 +6,35 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Luftkontrol</title>
 </head>
 <body>
     <br>
     <div id="app" style="text-align:center;">
         <div style="">
-            <br><h1>Login</h1><br>
-            <label><b>Email</b></label>
-            <br>
-            <input v-model="username" type="text" placeholder="Username...">
-            <br>
-            <label><b>Password</b></label>
-            <br>
-            <input v-model="password" type="password" placeholder="Password...">
-            <br>
-            <div v-if="errorMessage">
-                <p>{{errorMessage}}</p>
+            <!-- Login Stuff -->
+            <div v-if="userId == null">
+                <br><h1>Login</h1><br>
+                <label><b>Email</b></label>
+                <br>
+                <input v-model="username" type="text" placeholder="Username...">
+                <br>
+                <label><b>Password</b></label>
+                <br>
+                <input v-model="password" type="password" placeholder="Password...">
+                <br>
+                <div v-if="errorMessage">
+                    <p>{{errorMessage}}</p>
+                </div>
+                <input @click="Login" id="loginButton" type="button" value="Login" class="button button-primary">
             </div>
-            <input @click="Login" type="button" value="Login">
+            <!-- Show your info -->
+            <div v-else>
+                <!-- <p>You are logged in :)</p> -->
+                 <div class="wrapper">
+                    <input type="button" value="Log out" class="button button-primary" style="float: right;">
+                </div>
+            </div>
         </div>
     </div>
     <script src="index.js"></script>

@@ -16,6 +16,19 @@ Vue.createApp({
 
         };
     },
+    created()
+    {
+        if (document.title == "Luftkontrol")
+        {
+            document.addEventListener("keypress", (e) => {
+                if (e.key != "Enter")
+                    return
+                e.preventDefault();
+                var btn = document.getElementById("loginButton")
+                if (btn) btn.click()
+              });
+        }
+    },
     methods: {
         async Login() {
             const response = await axios.post(URI + "/login", {

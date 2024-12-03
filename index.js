@@ -1,11 +1,5 @@
 const URI = "https://localhost:7103/api/Users";
 
-const validationStatus = {
-    validateStatus: function (status) {
-        return true;
-    }
-}
-
 Vue.createApp({
     data() {
         return {

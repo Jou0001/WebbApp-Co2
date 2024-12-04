@@ -48,16 +48,23 @@ Vue.createApp({
 
         },
         async signUpUser() {
+            if (this.password != this.confirmPassword)
+            {
+                this.errorMessage = "Your password must match"
+                return
+            }
             const response = await axios.post(URI, {
                 username: this.username,
                 password: this.password
             }, this.validationStatus);
-            if (response.status != 200) {
-                errorMessage = "Your username or password was incorrect"
+            console.log(response)
+            if (response.status != 200 && response.status != 201) {
+                this.errorMessage = "Could not sign up user"
                 return
             }
             this.userId = response.data
-            console.log(this.userId)
+            console.log("this.userId")
+            document.location.href = "index.html"
         },
         async SetChartData()
         {

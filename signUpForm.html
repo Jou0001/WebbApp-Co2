@@ -27,6 +27,9 @@
             <label for="confirm password"><b>Confirm Password</b></label>
             <li><input id="confirm password" v-model="confirmPassword" type="password" placeholder="Confirm Password" type="text" /></li></br>
 
+            <div v-if="errorMessage">
+                <p>{{errorMessage}}</p>
+            </div>
             <button type="submit" v-on:click="signUpUser" class="btn btn-success">Sign up</button>
 
         </div>

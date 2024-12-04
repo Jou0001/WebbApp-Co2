@@ -18,14 +18,14 @@
             <h1>Sign Up Form</h1></br>
 
 
-            <label for=""><b>Email</b></label>
+            <label for="email"><b>Email</b></label>
             <br>
-            <li><input v-model="username" placeholder="Enter E-mail" type="text" /> </li></br>
+            <li><input id="email" v-model="username" placeholder="Enter E-mail" type="text" /> </li></br>
             <label for="password"><b>Password</b></label>
             <br>
-            <li><input v-model="password" type="password" placeholder="Enter Password" type="text" /> </li></br>
-            <label for="password"><b>Confirm Password</b></label>
-            <li><input v-model="password" type="password" placeholder="Confirm Password" type="text" /></li></br>
+            <li><input id="password" v-model="password" type="password" placeholder="Enter Password" type="text" /> </li></br>
+            <label for="confirm password"><b>Confirm Password</b></label>
+            <li><input id="confirm password" v-model="confirmPassword" type="password" placeholder="Confirm Password" type="text" /></li></br>
 
             <button type="submit" v-on:click="signUpUser" class="btn btn-success">Sign up</button>
 
@@ -34,4 +34,4 @@
     <script src="index.js"></script>
 </body>
 
-</html>
+</html> 

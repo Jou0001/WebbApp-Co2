@@ -5,6 +5,7 @@ Vue.createApp({
         return {
             username: '',
             password: '',
+            confirmPassword: '',
             userId: null,
             errorMessage: null,
             CO2ChartSource: "",

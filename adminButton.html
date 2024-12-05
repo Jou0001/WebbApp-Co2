@@ -10,11 +10,9 @@
 </head>
 <body>
     <div id="app">
-        
         <button v-if="!showInput" @click="toggleInput" class="btn btn-primary">Ændre Grænseværdier</button>
-
         
-        <input v-if="showInput" type="text" v-model="WarningValue" placeholder="Enter new CO2 value" class="form-control mt-3" />
+        <input v-if="showInput" type="text" v-model="warningValue" placeholder="Enter new CO2 value" class="form-control mt-3" @blur="updateWarningValue"/>
     </div>
 
     <script src="index.js"></script>

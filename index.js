@@ -1,4 +1,5 @@
 const URI = "https://localhost:7103/api/Users"; 
+const URICO2 = "https://localhost:7103/api/CO2";
 
 Vue.createApp({
     data() {
@@ -10,7 +11,7 @@ Vue.createApp({
             errorMessage: null,
             CO2ChartSource: "",
             warningValue: 1000,  
-            showInput: false,    
+            showInput: false,  
             validationStatus: {
                 validateStatus: function (status) {
                     return true;
@@ -21,56 +22,57 @@ Vue.createApp({
     created() {
         if (document.title == "Luftkontrol") {
             document.addEventListener("keypress", (e) => {
-                if (e.key != "Enter")
-                    return
+                if (e.key != "Enter") return;
                 e.preventDefault();
-                var btn = document.getElementById("loginButton")
-                if (btn) btn.click()
-                this.SetChartData()
+                var btn = document.getElementById("loginButton");
+                if (btn) btn.click();
+                this.SetChartData();
             });
         }
     },
     methods: {
-      
         async Login() {
             const response = await axios.post(URI + "/login", {
                 username: this.username,
                 password: this.password
             }, this.validationStatus);
             if (response.status != 200) {
-                this.errorMessage = "Your username or password was incorrect"
-                return
+                this.errorMessage = "Your username or password was incorrect";
+                return;
             }
-            this.userId = response.data
-            console.log(this.userId)
+            this.userId = response.data;
+            console.log(this.userId);
         },
 
-        
         async signUpUser() {
+            if (this.password != this.confirmPassword) {
+                this.errorMessage = "Your password must match";
+                return;
+            }
             const response = await axios.post(URI, {
                 username: this.username,
                 password: this.password
             }, this.validationStatus);
-            if (response.status != 200) {
-                errorMessage = "Your username or password was incorrect"
-                return
+            console.log(response);
+            if (response.status != 200 && response.status != 201) {
+                this.errorMessage = "Could not sign up user";
+                return;
             }
-            this.userId = response.data
-            console.log(this.userId)
+            this.userId = response.data;
+            console.log(this.userId);
+            document.location.href = "index.html";
         },
 
-       
         async SetChartData() {
-            this.CO2ChartSource = "https://quickchart.io/chart?width=500&height=300&chart={type:'line',data:{labels:['January','February', 'March','April', 'May'], datasets:[{label:'Dogs',data:[50,60,70,180,190], fill: false},{label:'Cats',data:[100,200,300,400,500], fill: false}]}}"
+            this.CO2ChartSource = "https://quickchart.io/chart?width=500&height=300&chart={type:'line',data:{labels:['January','February', 'March','April', 'May'], datasets:[{label:'Dogs',data:[50,60,70,180,190], fill: false},{label:'Cats',data:[100,200,300,400,500], fill: false}]}}";
         },
 
-      
         SetChartImage() {
-            var chart = document.getElementById("CO2Chart")
-            if (chart)
-                chart.src = this.CO2ChartSource
+            var chart = document.getElementById("CO2Chart");
+            if (chart && this.CO2ChartSource)
+                chart.src = this.CO2ChartSource;
             else
-                setTimeout(this.SetChartImage, 100)
+                setTimeout(this.SetChartImage, 100);
         },
 
         
@@ -96,9 +98,9 @@ Vue.createApp({
             }
         },
 
-       
         async SetWarningValue() {
-            
+        
         }
     }
 }).mount("#app");
+

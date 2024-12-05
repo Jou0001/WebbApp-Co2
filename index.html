@@ -15,18 +15,23 @@
             <!-- Login Stuff -->
             <div v-if="userId == null">
                 <br><h1>Login</h1><br>
-                <label><b>Email</b></label>
+                <label for="email"><b>Email</b></label>
                 <br>
-                <input v-model="username" type="text" placeholder="Username...">
+                <input id="email" v-model="username" type="text" placeholder="email...">
                 <br>
-                <label><b>Password</b></label>
+                <label for="password"><b>Password</b></label>
                 <br>
-                <input v-model="password" type="password" placeholder="Password...">
+                <input id="password" v-model="password" type="password" placeholder="Password...">
                 <br>
                 <div v-if="errorMessage">
                     <p>{{errorMessage}}</p>
                 </div>
                 <input @click="Login" id="loginButton" type="button" value="Login" class="button button-primary">
+                <br>
+                <a href="signUpForm.html">Forgot password?</a>
+                <br>
+                <a id="goToSignup" type="button" value="Sign up" class="button button-primary" href="signUpForm.html">Sign up</a>
+                
             </div>
             <!-- Show your info -->
             <div v-else>

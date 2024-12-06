@@ -26,21 +26,28 @@
                 <div v-if="errorMessage">
                     <p>{{errorMessage}}</p>
                 </div>
-                <input @click="Login" id="loginButton" type="button" value="Login" class="button button-primary">
+                <input @click="Login" id="loginButton" type="button" value="Login" class="btn btn-primary">
                 <br>
                 <a href="signUpForm.html">Forgot password?</a>
                 <br>
-                <a id="goToSignup" type="button" value="Sign up" class="button button-primary" href="signUpForm.html">Sign up</a>
+                <a id="goToSignup" type="button" value="Sign up" class="btn btn-primary" href="signUpForm.html">Sign up</a>
                 
             </div>
             <!-- Show your info -->
             <div v-else>
                 <!-- <p>You are logged in :)</p> -->
                  <div class="wrapper">
-                    <input type="button" value="Log out" class="button button-primary" style="float: right;">
+                    <input type="button" value="Log out" class="btn btn-primary" style="float: right;">
                     <div id="CO2ChartDiv" style="width: 50%; height: auto;">
                         <img id="CO2Chart" src="{{CO2ChartSource}}" style="width: 100%; height: auto;"/>
                         {{SetChartImage()}}
+                        <!-- Change how much data to view -->
+                        <div>
+                            <button type="button" class="btn btn-primary" @click="SetChartDataWithValue(3)" style="width: 20%; margin-left: 2.5%; margin-right: 5%;" value="All time">All time</button>
+                            <button type="button" class="btn btn-primary" @click="SetChartDataWithValue(2)" style="width: 20%; margin-right: 5%;" value="1 month"                    >1 month</button>
+                            <button type="button" class="btn btn-primary" @click="SetChartDataWithValue(1)" style="width: 20%; margin-right: 5%;" value="1 week"                     >1 week</button>
+                            <button type="button" class="btn btn-primary" @click="SetChartDataWithValue(0)" style="width: 20%; margin-right: 2.5%;" value="1 day"                    >1 day</button>
+                        </div>
                         <!-- Change warning value button -->
                         <br>
                         <button v-if="!showInput" @click="toggleInput" class="btn btn-primary" style="width: 100%;">Change value</button>

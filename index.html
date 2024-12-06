@@ -11,7 +11,7 @@
 <body>
     <br>
     <div id="app" style="text-align:center;">
-        <div style="">
+        <div>
             <!-- Login Stuff -->
             <div v-if="userId == null">
                 <br><h1>Login</h1><br>
@@ -38,10 +38,18 @@
                 <!-- <p>You are logged in :)</p> -->
                  <div class="wrapper">
                     <input type="button" value="Log out" class="button button-primary" style="float: right;">
-                    <img id="CO2Chart" src="{{CO2ChartSource}}"
-                    width="50%" height="auto" /> 
-                    {{SetChartImage()}}
-                    <button type="submit" v-on:click="warningValue">Ændre grænseværdier for advarsel</button>
+                    <div id="CO2ChartDiv" style="width: 50%; height: auto;">
+                        <img id="CO2Chart" src="{{CO2ChartSource}}" style="width: 100%; height: auto;"/>
+                        {{SetChartImage()}}
+                        <!-- Change warning value button -->
+                        <br>
+                        <button v-if="!showInput" @click="toggleInput" class="btn btn-primary" style="width: 100%;">Change value</button>
+                        <div v-if="showInput" width="100%">
+                            <input style="width: 80%;" type="text" v-model="warningValue" placeholder="Enter new CO2 value" @blur="updateWarningValue"/>
+                            <button style="width: 20%;" @click="updateWarningValue" class="btn btn-primary">Change value</button>
+
+                        </div>
+                    </div>
                     {{CO2ChartSource}}
                 </div>
             </div>

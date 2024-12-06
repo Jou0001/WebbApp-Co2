@@ -12,6 +12,7 @@ Vue.createApp({
             CO2ChartSource: "",
             warningValue: 1000,  
             showInput: false,  
+            activeSensor: null,
             validationStatus: {
                 validateStatus: function (status) {
                     return true;
@@ -83,23 +84,24 @@ Vue.createApp({
         
         async updateWarningValue() {
             try {
-                const response = await axios.put(URI + "/updateWarning", {
-                    userId: this.userId,      
+                const response = await axios.put(URICO2 + "/ChangeWarning", {
+                    userId: this.userId,
+                    sensorId: this.activeSensor,
                     warningValue: this.warningValue   
                 });
 
                 if (response.status === 200) {
                     console.log("Warning value updated successfully");
+                    this.toggleInput()
+                    alert("Warning value updated successfully")
                 } else {
                     console.log("Failed to update warning value");
+                    alert("Failed to update warning value")
                 }
             } catch (error) {
                 console.error("Error updating warning value:", error);
+                alert("Error updating warning value: " + error)
             }
-        },
-
-        async SetWarningValue() {
-        
         }
     }
 }).mount("#app");

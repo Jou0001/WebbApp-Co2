@@ -14,6 +14,10 @@ Vue.createApp({
             warningValue: 1000,  
             showInput: false,  
             activeSensor: null,
+            sensorList: [],
+            subscribeToSensor: -1,
+            graphSize: 66,
+            previouslyNewestMeasurement: null,
             validationStatus: {
                 validateStatus: function (status) {
                     return true;
@@ -39,13 +43,50 @@ Vue.createApp({
                 password: this.password
             }, this.validationStatus);
             if (response.status != 200) {
-                this.errorMessage = "Your username or password was incorrect";
+                this.errorMessage = "Your username or password was incorrect"
+                return
+            }
+            this.userId = response.data
+            this.CheckForUpdates()
+            this.resizeChart()
+            this.getSubscribedSensors()
+        },
+        resizeChart() {
+            if (!document.getElementById("CO2ChartDiv"))
+            {
+                setTimeout(this.resizeChart, 100)
+                return
+            }
+            document.getElementById("CO2ChartDiv").style.width = this.graphSize + "%"
+            document.getElementById("nextToChart").style.width = (100 - this.graphSize) + "%"
+        },
+        async addSensorToList(sensorId) {
+            const response = await axios.post(URI + "/" + sensorId, {
+                username: this.username,
+                password: this.password
+            }, this.validationStatus);
+            if (response.status != 200) {
+                this.errorMessage = "unable to subscribe to the sensor"
                 return;
             }
-            this.userId = response.data;
-            console.log(this.userId);
+            this.errorMessage = null
+            this.getSubscribedSensors()
         },
-
+        async getSubscribedSensors() {
+            const response = await axios.get(URI + "/sensors/" + this.userId, this.validationStatus);
+            if (response.status != 200) {
+                console.log("unable to get subscribed sensors")
+                return;
+            }
+            this.sensorList = []
+            for (var i = 0; i < response.data.length; i++)
+                this.sensorList.push(response.data[i].id)
+        },
+        logout() {
+            this.username = ""
+            this.password = ""
+            this.userId = null
+        },
         async signUpUser() {
             if (this.password != this.confirmPassword) {
                 this.errorMessage = "Your password must match";
@@ -174,12 +215,31 @@ Vue.createApp({
             labelsAsArrayString = labelsAsArrayString.slice(0, labelsAsArrayString.length - 1)
             labelsAsArrayString += "]"
             // get chart from external rest api
-            //this.CO2ChartSource = "https://quickchart.io/chart?width=500&height=300&chart={type:'line',data:{labels:['January','February', 'March','April', 'May'], datasets:[{label:'Dogs',data:[50,60,70,180,190], fill: false},{label:'Cats',data:[100,200,300,400,500], fill: false}]}}"
             this.CO2ChartSource = "https://quickchart.io/chart?width=500&height=300&chart={type:'line',data:{labels:" + labelsAsArrayString + ", datasets:[{label:'CO2 measurement',data:["+ data+"], fill: false}]}}"
-            // https://quickchart.io/chart?width=500&height=300&chart={type:'line',data:{labels:['2024-12-06T10:30:15.457'], datasets:[{label:'CO2 measurement',data:[1000], fill: false}]}}
             this.SetChartImage()
         },
+        async CheckForUpdates()
+        {
+            if (!this.userId)
+                return
+            setTimeout(this.CheckForUpdates, 30000)
+            if (this.previouslyNewestMeasurement != null)
+            {
+                var quiries = "?startTime=" + new Date(this.previouslyNewestMeasurement.getTime() - os * 60 * 1000).toJSON()
 
+                var response = await axios.get(URICO2 + "/" + this.activeSensor + quiries.replaceAll(":", "%3A"), this.validateStatus)
+                
+                if (response.status != 200 || response.data.length == 0)
+                    return
+                const d = new Date()
+                var os = d.getTimezoneOffset();
+                const today = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1, d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds())
+                this.previouslyNewestMeasurement = today
+                console.log("Today: " + d)
+            }
+            this.SetChartData()
+
+        },
         SetChartImage() {
             var chart = document.getElementById("CO2Chart");
             if (chart && this.CO2ChartSource)

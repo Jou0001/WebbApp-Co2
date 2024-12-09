@@ -37,8 +37,8 @@
             <div v-else>
                 <!-- <p>You are logged in :)</p> -->
                  <div class="wrapper">
-                    <input type="button" value="Log out" class="btn btn-primary" style="float: right;">
-                    <div id="CO2ChartDiv" style="width: 50%; height: auto;">
+                    <input type="button" @click="logout" value="Log out" class="btn btn-primary" style="float: right;">
+                    <div id="CO2ChartDiv" style="width: 50%; height: auto; float: right;">
                         <img id="CO2Chart" src="{{CO2ChartSource}}" style="width: 100%; height: auto;"/>
                         {{SetChartImage()}}
                         <!-- Change how much data to view -->
@@ -57,7 +57,18 @@
 
                         </div>
                     </div>
-                    {{CO2ChartSource}}
+                    <div id="nextToChart" style="width: 50%; text-align: left;">
+                        <p>Select Sensor:</p>
+                        <select>
+                            <option v-for="sensor in sensorList">
+                                {{sensor}}
+                            </option>
+                        </select>
+                        <br>
+                        <p>Subscribe to new sensor:</p>
+                        <input style="height: 36px;" type="number" v-model="subscribeToSensor">
+                        <button @click="addSensorToList(subscribeToSensor)" class="btn btn-primary">Subscribe</button>
+                    </div>
                 </div>
             </div>
         </div>

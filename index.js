@@ -76,7 +76,7 @@ Vue.createApp({
             const d = new Date()
             var os = d.getTimezoneOffset();
             const today = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1)
-            var measurementsPerDay = []
+            var timeBetweenMeasurements
             var startDay
             // get data
             switch (this.chartShowDataMode)
@@ -85,7 +85,7 @@ Vue.createApp({
                 currentDate = new Date()
                 currentDate.setUTCDate(currentDate.getUTCDate() - 7)
                 startDay = { Day: currentDate.getDate(), Month: currentDate.getMonth(), Year: currentDate.getFullYear() }
-                measurementsPerDay = [8, 16]
+                timeBetweenMeasurements = 12
                 break
                 case 2: // month // 1 per day
                 startDay = { Day: d.getDate(), Month: (d.getMonth() - 1), Year: d.getFullYear() }
@@ -94,17 +94,17 @@ Vue.createApp({
                     startDay.Month = 11
                     startDay.Year -= 1
                 }
-                measurementsPerDay = [12]
+                timeBetweenMeasurements = 24
                 break
                 case 3: // all time // 1 per day
                 //startDay = { Day: 1, Month: 1, Year: 1999 }
                 startDay = null
-                measurementsPerDay = [12] // works wierd if all time is too long, proboably
+                timeBetweenMeasurements = 24
                 break
                 case 0: // day // 1 per hour
                 default:
                 startDay = { Day: d.getDate(), Month: d.getMonth(), Year: d.getFullYear() }
-                measurementsPerDay = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+                timeBetweenMeasurements = 1
                 break
             }
             if (startDay)
@@ -131,40 +131,29 @@ Vue.createApp({
             }
             // filter data quantity
             var usedData = []
+            usedData.push(response.data[0])
             var lastMeasurementTime = new Date(response.data[0].measurementTime)
-            var measurementsPerDayIndex = 0
             var lastDate = -1
             var date = lastMeasurementTime.getDate()
+            timeBetweenMeasurements = timeBetweenMeasurements * 60 * 60
+            // timeBetweenMeasurements
             //usedData.push(response.data[0])
             // measurementsPerDay
-            for (var i = 1; i < response.data.length; i++)
+            for (var i = 1; i < response.data.length - 1; i++)
             {
                 var currentMeasurementTime = new Date(response.data[i].measurementTime)
-                if (currentMeasurementTime.getDate() == lastDate)
-                    continue
-                var previousIterationMeasurementTime = new Date(response.data[i - 1].measurementTime)
-                // get distance to measurementsPerDay[measurementsPerDayIndex], and compare with last iteration
-                var targetTime = measurementsPerDay[measurementsPerDayIndex] * 60 * 60 + date * 60 * 60 * 24
+
                 var currentTime = currentMeasurementTime.getHours() * 60 * 60 + currentMeasurementTime.getMinutes() * 60 + currentMeasurementTime.getSeconds() + currentMeasurementTime.getDate() * 60 * 60 * 24
-                var oldTime = previousIterationMeasurementTime.getHours() * 60 * 60 + previousIterationMeasurementTime.getMinutes() * 60 + previousIterationMeasurementTime.getSeconds() + previousIterationMeasurementTime.getDate() * 60 * 60 * 24
-                console.log("target " + i + ": " + targetTime + " <-> " + currentTime + " : " + oldTime)
-                var distCurrentTime = Math.abs(targetTime - currentTime)
-                var distOldTime = Math.abs(targetTime - oldTime)
-                console.log("timeDiff " + i + ": " + distCurrentTime + " <-> " + distOldTime)
-                if (distCurrentTime > distOldTime)
-                    continue
-                // add the time :)
-                lastMeasurementTime = previousIterationMeasurementTime
-                usedData.push(response.data[i - 1])
-                measurementsPerDayIndex++
-                if (measurementsPerDayIndex == measurementsPerDay.length || lastMeasurementTime.getDate() != date)
-                {
-                    measurementsPerDayIndex = 0
-                    currentDate = new Date(response.data[i].measurementTime)
-                    currentDate.setUTCDate(currentDate.getUTCDate() + 1)
-                    date = currentDate.getDate()
-                }
+                var oldTime = lastMeasurementTime.getHours() * 60 * 60 + lastMeasurementTime.getMinutes() * 60 + lastMeasurementTime.getSeconds() + lastMeasurementTime.getDate() * 60 * 60 * 24
                 
+                // check time difference is good
+                var difference = Math.abs(currentTime - oldTime)
+                if (difference < timeBetweenMeasurements)
+                    continue
+
+                // add it to usedData
+                usedData.push(response.data[i])
+                lastMeasurementTime = currentMeasurementTime
             }
             // we always want the newest data along with some of the old data
             usedData.push(response.data[response.data.length - 1])

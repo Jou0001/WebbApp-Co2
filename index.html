@@ -59,6 +59,11 @@
                         </div>
                     </div>
                     <div id="nextToChart" style="width: 50%; text-align: left;">
+                        <h1>Newest data</h1>
+                        <div v-if="newestData">
+                            <p>last measurement was taken at: {{newestData.measurementTime}}, with a value of: {{newestData.measurementValue}}</p>
+                        </div>
+                        <h1>Sensors</h1>
                         <p>Select Sensor:</p>
                         <select v-model="activeSensor" @change="SetChartData()">
                             <option v-for="sensor in sensorList">
@@ -69,6 +74,29 @@
                         <p>Subscribe to new sensor:</p>
                         <input style="height: 36px;" type="number" v-model="subscribeToSensor">
                         <button @click="addSensorToList(subscribeToSensor)" class="btn btn-primary">Subscribe</button>
+
+                        <!-- User information -->
+                        <h1>User information</h1>
+                        <p>Email:</p>
+                        <p>{{username}}</p>
+                        <div v-if="showNewPasswordBox">
+                            <button @click="toggleShowNewPasswordBox" class="btn btn-primary">Actually, nevermind</button>
+                            <br>
+                            <p>Old password</p>
+                            <input type="password" v-model="oldPassword">
+                            <br>
+                            <p>New password</p>
+                            <input type="password" v-model="newPassword">
+                            <br>
+                            <p>Confirm new password</p>
+                            <input type="password" v-model="confirmPassword">
+                            <br>
+                            <div v-if="changePasswordErrorMessage"><p>{{changePasswordErrorMessage}}</p></div>
+                            <button @click="changePassword" class="btn btn-primary">Change</button>
+                        </div>
+                        <div v-else>
+                            <button @click="toggleShowNewPasswordBox" class="btn btn-primary">Change password</button>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -6,9 +6,12 @@ Vue.createApp({
         return {
             username: '',
             password: '',
+            newPassword: '',
+            oldPassword: '',
             confirmPassword: '',
             userId: null,
             errorMessage: null,
+            changePasswordErrorMessage: null,
             CO2ChartSource: "",
             chartShowDataMode: 0, // 0 = day, 1 = week, 2 = month, 3 = all time
             warningValue: 1000,  
@@ -19,6 +22,8 @@ Vue.createApp({
             subscribeToSensor: -1,
             graphSize: 66,
             previouslyNewestMeasurement: null,
+            newestData: null,
+            showNewPasswordBox: false,
             validationStatus: {
                 validateStatus: function (status) {
                     return true;
@@ -43,7 +48,7 @@ Vue.createApp({
             const response = await axios.post(URI + "/login", {
                 username: this.username,
                 password: this.password
-            }, this.validationStatus);
+            }, this.validationStatus)
             if (response.status != 200) {
                 this.errorMessage = "Your username or password was incorrect"
                 return
@@ -184,12 +189,7 @@ Vue.createApp({
             var usedData = []
             usedData.push(response.data[0])
             var lastMeasurementTime = new Date(response.data[0].measurementTime)
-            var lastDate = -1
-            var date = lastMeasurementTime.getDate()
             timeBetweenMeasurements = timeBetweenMeasurements * 60 * 60
-            // timeBetweenMeasurements
-            //usedData.push(response.data[0])
-            // measurementsPerDay
             for (var i = 1; i < response.data.length - 1; i++)
             {
                 var currentMeasurementTime = new Date(response.data[i].measurementTime)
@@ -208,6 +208,7 @@ Vue.createApp({
             }
             // we always want the newest data along with some of the old data
             usedData.push(response.data[response.data.length - 1])
+            this.newestData = response.data[response.data.length - 1]
             
             var labels = []
             var data = []
@@ -248,10 +249,14 @@ Vue.createApp({
                 if (response.status != 200 || response.data.length == 0)
                     return
                 const d = new Date()
-                var os = d.getTimezoneOffset();
-                const today = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1, d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds())
+                const today = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1, d.getHours(), d.getMinutes(), d.getSeconds() + 10, d.getMilliseconds())
                 this.previouslyNewestMeasurement = today
-                console.log("Today: " + d)
+            }
+            else
+            {
+                const d = new Date()
+                const today = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1, d.getHours(), d.getMinutes(), d.getSeconds() + 10, d.getMilliseconds())
+                this.previouslyNewestMeasurement = today
             }
             this.SetChartData()
 
@@ -271,7 +276,33 @@ Vue.createApp({
         toggleInput() {
             this.showInput = true; 
         },
+        async changePassword()
+        {
+            if (this.newPassword != this.confirmPassword)
+            {
+                this.changePasswordErrorMessage = "new password and confirm new password must match"
+                return
+            }
+            const response = await axios.post(URI + "/changePassword", {
+                username: this.username,
+                password: this.oldPassword,
+                newPassword: this.newPassword
+            }, this.validationStatus)
+            if (response.status != 200)
+            {
+                this.changePasswordErrorMessage = "unable to change password: " + response.status
+                return
+            }
 
+            this.toggleShowNewPasswordBox()
+            
+        },
+        toggleShowNewPasswordBox() {
+            this.showNewPasswordBox = !this.showNewPasswordBox
+            this.oldPassword = ''
+            this.newPassword =  ''
+            this.confirmPassword = ''
+        },
         
         async updateWarningValue() {
             try {
@@ -280,7 +311,6 @@ Vue.createApp({
                     sensorId: this.activeSensor,
                     warningValue: this.warningValue   
                 });
-
                 if (response.status === 200) {
                     console.log("Warning value updated successfully");
                     this.toggleInput()

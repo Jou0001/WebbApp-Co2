@@ -19,7 +19,7 @@ Vue.createApp({
             activeSensor: null,
             chartError: null,
             sensorList: [],
-            subscribeToSensor: -1,
+            subscribeToSensor: null,
             graphSize: 66,
             previouslyNewestMeasurement: null,
             newestData: null,

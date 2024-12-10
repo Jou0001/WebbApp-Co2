@@ -39,7 +39,8 @@
                  <div class="wrapper">
                     <input type="button" @click="logout" value="Log out" class="btn btn-primary" style="float: right;">
                     <div id="CO2ChartDiv" style="width: 50%; height: auto; float: right;">
-                        <img id="CO2Chart" src="{{CO2ChartSource}}" style="width: 100%; height: auto;"/>
+                        <div v-if="chartError"><p>{{chartError}}</p></div>
+                        <img id="CO2Chart" src="{{CO2ChartSource}}" style="width: 100%; height: 0px;"/>
                         {{SetChartImage()}}
                         <!-- Change how much data to view -->
                         <div>
@@ -59,7 +60,7 @@
                     </div>
                     <div id="nextToChart" style="width: 50%; text-align: left;">
                         <p>Select Sensor:</p>
-                        <select>
+                        <select v-model="activeSensor" @change="SetChartData()">
                             <option v-for="sensor in sensorList">
                                 {{sensor}}
                             </option>

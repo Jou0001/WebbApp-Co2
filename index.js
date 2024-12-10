@@ -14,6 +14,7 @@ Vue.createApp({
             warningValue: 1000,  
             showInput: false,  
             activeSensor: null,
+            chartError: null,
             sensorList: [],
             subscribeToSensor: -1,
             graphSize: 66,
@@ -26,6 +27,7 @@ Vue.createApp({
         };
     },
     created() {
+        this.noData()
         if (document.title == "Luftkontrol") {
             document.addEventListener("keypress", (e) => {
                 if (e.key != "Enter") return;
@@ -81,6 +83,8 @@ Vue.createApp({
             this.sensorList = []
             for (var i = 0; i < response.data.length; i++)
                 this.sensorList.push(response.data[i].id)
+            
+            this.activeSensor = this.sensorList[this.sensorList.length - 1]
         },
         logout() {
             this.username = ""
@@ -113,6 +117,11 @@ Vue.createApp({
         async SetChartData()
         {
             this.CO2ChartSource = null
+            if (!this.activeSensor)
+            {
+                this.noData()
+                return
+            }
             // get date
             const d = new Date()
             var os = d.getTimezoneOffset();
@@ -151,7 +160,6 @@ Vue.createApp({
             if (startDay)
                 startDay = new Date(startDay.Year, startDay.Month, startDay.Day)
             // get our data from rest api
-            this.activeSensor = 1
             var quiries
             if (startDay)
                 var quiries = "?startTime=" + new Date(startDay.getTime() - os * 60 * 1000).toJSON()+"&endTime=" + new Date(today.getTime() - os * 60 * 1000).toJSON()
@@ -163,11 +171,13 @@ Vue.createApp({
             if (response.status != 200)
             {
                 console.log("Unable to retrieve CO2 data: " + response.status)
+                this.noData()
                 return
             }
             if (response.data.length == 0)
             {
                 console.log("No data in timeframe")
+                this.noData()
                 return
             }
             // filter data quantity
@@ -203,12 +213,9 @@ Vue.createApp({
             var data = []
             for (var i = 0; i < usedData.length; i++)
             {
-                console.log(usedData[i])
                 labels.push(usedData[i].measurementTime)
                 data.push(usedData[i].measurementValue)
             }
-            console.log(labels)
-            console.log(data)
             var labelsAsArrayString = "["
             for (var i = 0; i < labels.length; i++)
                 labelsAsArrayString += "'" + labels[i] + "',"
@@ -216,7 +223,16 @@ Vue.createApp({
             labelsAsArrayString += "]"
             // get chart from external rest api
             this.CO2ChartSource = "https://quickchart.io/chart?width=500&height=300&chart={type:'line',data:{labels:" + labelsAsArrayString + ", datasets:[{label:'CO2 measurement',data:["+ data+"], fill: false}]}}"
+            this.chartError = null
             this.SetChartImage()
+        },
+        noData()
+        {
+            this.CO2ChartSource = null
+            this.chartError = "No data"
+            var chart = document.getElementById("CO2Chart")
+            if (chart)
+                chart.style.height = "0px"
         },
         async CheckForUpdates()
         {
@@ -243,7 +259,10 @@ Vue.createApp({
         SetChartImage() {
             var chart = document.getElementById("CO2Chart");
             if (chart && this.CO2ChartSource)
+            {
+                chart.style.height = "auto"
                 chart.src = this.CO2ChartSource;
+            }
             else
                 setTimeout(this.SetChartImage, 100);
         },

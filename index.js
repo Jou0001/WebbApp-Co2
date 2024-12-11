@@ -20,7 +20,8 @@ Vue.createApp({
             chartError: null,
             sensorList: [],
             subscribeToSensor: null,
-            graphSize: 66,
+            graphSize: 50,
+            defaultGraphSize: 50,
             previouslyNewestMeasurement: null,
             newestData: null,
             showNewPasswordBox: false,
@@ -32,6 +33,10 @@ Vue.createApp({
         };
     },
     created() {
+        windowResize()
+        window.addEventListener("resize", (event) =>{
+            windowResize()
+        });
         this.noData()
         if (document.title == "Luftkontrol") {
             document.addEventListener("keypress", (e) => {
@@ -58,6 +63,13 @@ Vue.createApp({
             this.resizeChart()
             this.getSubscribedSensors()
         },
+        windowResize() {
+            if (window.innerWidth <= 600) 
+                this.graphSize = 100
+            else
+                this.graphSize = this.defaultGraphSize
+            this.resizeChart()
+        },
         resizeChart() {
             if (!document.getElementById("CO2ChartDiv"))
             {
@@ -65,7 +77,11 @@ Vue.createApp({
                 return
             }
             document.getElementById("CO2ChartDiv").style.width = this.graphSize + "%"
-            document.getElementById("nextToChart").style.width = (100 - this.graphSize) + "%"
+            if (this.graphSize < 100)
+                document.getElementById("nextToChart").style.width = (100 - this.graphSize) + "%"
+            else
+                document.getElementById("nextToChart").style.width = this.graphSize + "%"
+
         },
         async addSensorToList(sensorId) {
             const response = await axios.post(URI + "/" + sensorId, {

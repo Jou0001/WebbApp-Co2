@@ -25,6 +25,7 @@ Vue.createApp({
             previouslyNewestMeasurement: null,
             newestData: null,
             showNewPasswordBox: false,
+            doc: document,
             validationStatus: {
                 validateStatus: function (status) {
                     return true;
@@ -33,9 +34,9 @@ Vue.createApp({
         };
     },
     created() {
-        windowResize()
+        this.windowResize()
         window.addEventListener("resize", (event) =>{
-            windowResize()
+            this.windowResize()
         });
         this.noData()
         if (document.title == "Luftkontrol") {

@@ -15,17 +15,20 @@
         &nbsp;
         <div style="text-align:center;">
             <br>
-            <h1>Sign Up Form</h1></br>
-
+            <h1>Sign Up Form</h1>
              
             <label for="email"><b>Email</b></label>
             <br>
-            <li><input id="email" v-model="username" placeholder="Enter E-mail" type="text" /> </li></br>
+            <input id="email" v-model="username" placeholder="Enter E-mail" type="text">
+            <br>
             <label for="password"><b>Password</b></label>
             <br>
-            <li><input id="password" v-model="password" type="password" placeholder="Enter Password" type="text" /> </li></br>
-            <label for="confirm password"><b>Confirm Password</b></label>
-            <li><input id="confirm password" v-model="confirmPassword" type="password" placeholder="Confirm Password" type="text" /></li></br>
+            <input id="password" v-model="password" type="password" placeholder="Enter Password">
+            <br>
+            <label for="confirmPassword"><b>Confirm Password</b></label>
+            <br>
+            <input id="confirmPassword" v-model="confirmPassword" type="password" placeholder="Confirm Password">
+            <br>
 
             <div v-if="errorMessage">
                 <p>{{errorMessage}}</p>

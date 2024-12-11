@@ -98,7 +98,6 @@ Vue.createApp({
         async getSubscribedSensors() {
             const response = await axios.get(URI + "/sensors/" + this.userId, this.validationStatus);
             if (response.status != 200) {
-                console.log("unable to get subscribed sensors")
                 return;
             }
             this.sensorList = []
@@ -121,13 +120,11 @@ Vue.createApp({
                 username: this.username,
                 password: this.password
             }, this.validationStatus);
-            console.log(response);
             if (response.status != 200 && response.status != 201) {
                 this.errorMessage = "Could not sign up user";
                 return;
             }
             this.userId = response.data;
-            console.log(this.userId);
             document.location.href = "index.html";
         },
         async SetChartDataWithValue(value)
@@ -191,13 +188,11 @@ Vue.createApp({
             
             if (response.status != 200)
             {
-                console.log("Unable to retrieve CO2 data: " + response.status)
                 this.noData()
                 return
             }
             if (response.data.length == 0)
             {
-                console.log("No data in timeframe")
                 this.noData()
                 return
             }
@@ -328,15 +323,12 @@ Vue.createApp({
                     warningValue: this.warningValue   
                 });
                 if (response.status === 200) {
-                    console.log("Warning value updated successfully");
                     this.toggleInput()
                     alert("Warning value updated successfully")
                 } else {
-                    console.log("Failed to update warning value");
                     alert("Failed to update warning value")
                 }
             } catch (error) {
-                console.error("Error updating warning value:", error);
                 alert("Error updating warning value: " + error)
             }
         }

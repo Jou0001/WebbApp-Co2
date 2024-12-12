@@ -1,5 +1,7 @@
-const URI = "https://localhost:7103/api/Users"; 
-const URICO2 = "https://localhost:7103/api/CO2";
+//const URI = "https://localhost:7103/api/Users"; 
+const URI = "https://co2restapi.azurewebsites.net/api/Users"; 
+//const URICO2 = "https://localhost:7103/api/CO2";
+const URICO2 = "https://co2restapi.azurewebsites.net/api/CO2";
 
 Vue.createApp({
     data() {

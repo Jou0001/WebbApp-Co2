@@ -1,6 +1,6 @@
 //const URI = "https://localhost:7103/api/Users"; 
-const URI = "https://co2restapi.azurewebsites.net/api/Users"; 
 //const URICO2 = "https://localhost:7103/api/CO2";
+const URI = "https://co2restapi.azurewebsites.net/api/Users"; 
 const URICO2 = "https://co2restapi.azurewebsites.net/api/CO2";
 
 Vue.createApp({
@@ -168,7 +168,6 @@ Vue.createApp({
                 timeBetweenMeasurements = 24
                 break
                 case 3: // all time // 1 per day
-                //startDay = { Day: 1, Month: 1, Year: 1999 }
                 startDay = null
                 timeBetweenMeasurements = 24
                 break
